@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DailyExpenseWeb</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+	<body class="nav-md">
+		<div class="container body">
+		  	<div class="main_container">
+				<%= render "layouts/header" %>
+					<%# if alert %>
+						<!-- <p class="alert alert-danger"><%= alert %></p> -->
+					<%# end %>
+				<%= yield %>
+			</div>
+		</div>
+	</body>
+</html>

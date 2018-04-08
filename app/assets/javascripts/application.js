@@ -14,4 +14,5 @@
 //= require gentelella-custom
 //= require rails-ujs
 //= require turbolinks
+//= require bootstrap-datepicker
 //= require_tree .

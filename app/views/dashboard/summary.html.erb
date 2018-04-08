@@ -20,12 +20,32 @@
                     Enter the date to list the expense
                     <%= form_with url: dashboard_summary_path, local: true do |form| %>
                       <div class="form-group" >
+                        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
                         <div class="col-lg-12 col-md-12">
-                          Date
+                          Enter exact date To find expense 
                         </div>
-                        <div class="col-lg-12 col-md-12" style="padding-top:2%">
-                          <%= form.date_select :date, :class => "form-control", :placeholder => "Date", :name => "date" ,autofocus: true , required: :true%>
+                          <div class="col-md-11 xdisplay_inputx form-group has-feedback">
+                            <input type="text" id="only_date" class="form-control custom_date" name="date_month_year" placeholder="Enter a date">
                               <button type="submit" class="btn btn-success">Search</button>
+                        </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                          <div class="col-lg-12 col-md-12">
+                            Enter exact month To find expense of the month
+                          </div>
+                          <div class="col-md-11 xdisplay_inputx form-group has-feedback">
+                            <input type="text" id="only_month" class="form-control custom_date" name="month_year" placeholder="Enter a month">
+                              <button type="submit" class="btn btn-success">Search</button>
+                        </div>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                          <div class="col-lg-12 col-md-12">
+                            Enter exact year To find expense of the year
+                          </div>
+                        <div class="col-md-11 xdisplay_inputx form-group has-feedback">
+                            <input type="text" id="only_year" class="form-control custom_date" name="year" placeholder="Enter a year">
+                              <button type="submit" class="btn btn-success">Search</button>
+                        </div>
                         </div>
                       </div>
                       <% end %>
@@ -70,4 +90,22 @@
           </div>
         </div>
       </div>
-      <!-- /page content -->
+      <!-- /page content -->   
+      <script type="text/javascript">
+      $(function(){
+            // $('.custom_date').datepicker({format: 'yyyy-mm-dd'})  
+            $('#only_month').datepicker({
+              format: "yyyy-mm",
+              startView: "months", 
+              minViewMode: "months" 
+            });  
+            $('#only_year').datepicker({
+              format: "yyyy",
+              startView: "years", 
+              minViewMode: "years"
+            });  
+            $('#only_date').datepicker({
+              format: "yyyy-mm-dd"
+            });
+          });
+      </script>

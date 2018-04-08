@@ -55,3 +55,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'gentelella-rails'
 gem 'devise'
 gem 'bootstrap-datepicker-rails'
+gem 'grape'
+gem 'grape-entity'
+gem 'grape_on_rails_routes'

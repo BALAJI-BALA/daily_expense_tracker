@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
+
+  #api routes
+  mount DailyExpense::Base => '/'
+
   resources :expenses
+
   devise_for :users
   get 'dashboard/index'
   get 'dashboard/add_expense'

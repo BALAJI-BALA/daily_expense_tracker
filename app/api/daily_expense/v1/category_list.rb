@@ -4,6 +4,9 @@ module DailyExpense
       version 'v1', using: :path
       format :json
       prefix :api
+  		before do
+   		 	authenticate!
+  		end
       	desc 'Return list of categories'
 		resource :categories do
 			get do
@@ -59,20 +62,22 @@ module DailyExpense
 				end
 			end
 		desc 'Delete a specific category from list'
-			params do
-      			requires :id, type: Integer,  desc: "Enter category id to delete."
-    		end
-			delete do
-			  	expense_category_list = Category.find(params[:id])
-			  	if expense_category_list.destroy
-					status 200
-					present expense_category_list, with: DailyExpense::Entities::Category
-				else
-					status 400
-					present delete: "Category was not deleted succesfully"
+			# params do
+   #    			requires :id, type: Integer,  desc: "Enter category id to delete."
+   #  		end
+   			route_param :id do
+				delete do
+				  	expense_category_list = Category.find(params[:id])
+				  	if expense_category_list.destroy
+						status 200
+						present expense_category_list, with: DailyExpense::Entities::Category
+					else
+						status 400
+						present delete: "Category was not deleted succesfully"
+					end
+				  	rescue ActiveRecord::RecordNotFound
+						error!({ status: :error, message: :not_found }, 404)
 				end
-			  	rescue ActiveRecord::RecordNotFound
-					error!({ status: :error, message: :not_found }, 404)
 			end
 		end
   	end

@@ -14,9 +14,17 @@ module DailyExpenseWeb
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-	config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
+    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
     
-	config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+
+    config.middleware.use Rack::Cors do
+      allow do
+        origins "*"
+        resource "*", headers: :any, methods: [:get, 
+            :post, :put, :delete, :options]
+      end
+    end
   end
     ENV.update YAML.load_file('config/secrets.yml')[Rails.env] rescue {}
 end

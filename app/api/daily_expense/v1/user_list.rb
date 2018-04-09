@@ -29,18 +29,23 @@ module DailyExpense
 			    end
 		    desc 'Sign Up via email and password'
 			    post "/sign_up"do
-			    	user = User.new(email: params[:email].downcase, password: params[:password], password_confirmation: params[:password_confirmation])
-			    	if params[:password] == params[:password_confirmation]
-					  if user.save! 
-  						status 200
-						present email: user.email, token: user.auth_token
-					  else
-					    error_msg = 'Something went wrong please try again'
-					    error!({ 'error_msg' => error_msg }, 401)
-					  end
+			    	if user = User.find_by(email: params[:email].downcase)
+			    		error_msg = 'Email already taken please try different one'
+						error!({ 'error_msg' => error_msg }, 401)
 					else
-						error_msg = 'password and password_confirmation mismatching please try again'
-					    error!({ 'error_msg' => error_msg }, 401)
+				    	user = User.new(email: params[:email].downcase, password: params[:password], password_confirmation: params[:password_confirmation])
+				    	if params[:password] == params[:password_confirmation]
+						  if user.save! 
+	  						status 200
+							present email: user.email, token: user.auth_token
+						  else
+						    error_msg = 'Something went wrong please try again'
+						    error!({ 'error_msg' => error_msg }, 401)
+						  end
+						else
+							error_msg = 'password and password_confirmation mismatching please try again'
+						    error!({ 'error_msg' => error_msg }, 401)
+						end
 					end
 			    end
 			desc 'Get Users list'

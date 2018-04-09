@@ -22,3 +22,6 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+To Acces Swagger to test api
+Open [localhost:3000](http://localhost:3000/api/swagger)

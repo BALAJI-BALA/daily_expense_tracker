@@ -326,7 +326,9 @@ DEPENDENCIES
   mysql2 (>= 0.3.18, < 0.6.0)
   puma (~> 3.7)
   rack-cors
+  rack-test
   rails (~> 5.1.6)
+  rake
   rspec-rails (~> 3.4)
   sass-rails (~> 5.0)
   selenium-webdriver

@@ -10,14 +10,14 @@ module DailyExpense
       resource :expense do
         desc 'Return list of expenses created'
         get do
-          expense_list = Expense.all
+          expense_list = @current_user.expenses.all
           present expense_list, with: DailyExpense::Entities::Expense
         end
 
         desc 'Return a specific expense list'
           route_param :id do
             get do
-              expense_particular_list = Expense.find(params[:id])
+              expense_particular_list = @current_user.expenses.find(params[:id])
               present expense_particular_list
                 rescue ActiveRecord::RecordNotFound
                 error!({ status: :error, message: :not_found }, 404)
@@ -30,13 +30,13 @@ module DailyExpense
             requires :method, type: String, desc: 'Enter a method type of payment done either debit or cash'
             requires :amount, type: String, desc: 'Enter a amount'
             requires :category_id, type: Integer, desc: 'Enter a category id'
-            requires :user_id, type: Integer, desc: 'Enter a user id'
+            # requires :user_id, type: Integer, desc: 'Enter a user id'
           end
           post '/new' do
             expense_category = Category.find(params[:category_id])
-            expense_user = User.find(params[:user_id])
+            expense_user = User.find(@current_user.id)
             if expense_category.present? && expense_user.present?
-                expense = Expense.create!(date: params[:date], item: params[:item], method: params[:method], amount: params[:amount], category_id: params[:category_id], user_id: params[:user_id])
+                expense = Expense.create!(date: params[:date], item: params[:item], method: params[:method], amount: params[:amount], category_id: params[:category_id], user_id: @current_user.id)
               if expense.save
                 status 200
                     present expense, with: DailyExpense::Entities::Expense
@@ -56,15 +56,15 @@ module DailyExpense
             optional :method, type: String, desc: 'Enter a method type of payment done either debit or cash'
             optional :amount, type: String, desc: 'Enter a amount'
             optional :category_id, type: Integer, desc: 'Enter a category id'
-            requires :user_id, type: Integer, desc: 'Enter a user id'
+            # requires :user_id, type: Integer, desc: 'Enter a user id'
           end
           route_param :id do
             put '/edit' do
-              expense = Expense.find(params[:id])
+              expense = @current_user.expenses.find(params[:id])
               expense_category = Category.find(params[:category_id])
-              expense_user = User.find(params[:user_id])
+              expense_user = User.find(current_user.id)
               if expense.present? && expense_user.present?
-                if expense.update(date: params[:date], item: params[:item], method: params[:method], amount: params[:amount], category_id: params[:category_id], user_id: params[:user_id])
+                if expense.update(date: params[:date], item: params[:item], method: params[:method], amount: params[:amount], category_id: params[:category_id], user_id: @current_user.id)
                       status 200
                       present expense, with: DailyExpense::Entities::Expense
                 else
@@ -79,7 +79,7 @@ module DailyExpense
         desc 'Delete a specific expense from list'
         route_param :id do
         delete do
-            expense_list = Expense.find(params[:id])
+            expense_list = @current_user.expenses.find(params[:id])
             if expense_list.destroy
             status 200
             present expense_list, with: DailyExpense::Entities::Expense

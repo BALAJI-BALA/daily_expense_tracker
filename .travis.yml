@@ -12,11 +12,9 @@ addons:
       - mysql-server
       - mysql-client
 script: 
-  - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec rake db:test:prepare
+  - RAILS_ENV=test bundle exec rake db:create db:migrate --trace
   - bundle exec rspec spec/
-before_install:
-  - mysql -e 'CREATE DATABASE my_app_test;'
 before_script:
   -'RAILS_ENV=test bundle exec rake db:create --trace'
+  -mysql -e 'create database myapp_test'
 bundler_args: --binstubs=./bundler_stubs

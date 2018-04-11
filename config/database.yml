@@ -15,8 +15,7 @@ test:
   encoding: utf8
   database: daily_expense_web_test
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password: agira
+  username: travis
   socket: /var/run/mysqld/mysqld.sock
 
 production:

@@ -1,9 +1,10 @@
 language: ruby
-rvm:
-  - 2.5.0
+rvm: 2.5.0
+
 env:
   - DB=mysql
 addons:
+
   apt:
     sources:
       - mysql-5.7-trusty
@@ -17,5 +18,5 @@ script:
 before_install:
   - mysql -e 'CREATE DATABASE my_app_test;'
 before_script:
-  - mysql -e 'create database my_app_test'
+  -'RAILS_ENV=test bundle exec rake db:create --trace'
 bundler_args: --binstubs=./bundler_stubs

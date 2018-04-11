@@ -20,9 +20,9 @@ RSpec.describe Expense, :type => :model do
     	it { should validate_presence_of(:amount) }
   	end	
 
- #  	it "is valid with valid attributes" do
-	# 	expect(subject).to be_valid
-	# end
+  	it "is valid with valid attributes" do
+		expect(subject).to be_valid
+	end
 
 	it "is not valid without a date" do
 		subject.date = nil

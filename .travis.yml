@@ -8,5 +8,4 @@ script:
   - bundle exec rspec
 before_script:
   - psql -c 'create database daily_expense_web_test;' -U postgres
-  - psql -c root -e "GRANT ALL PRIVILEGES ON daily_expense_web_test.* TO 'travis'@'%';";
 bundler_args: --binstubs=./bundler_stubs

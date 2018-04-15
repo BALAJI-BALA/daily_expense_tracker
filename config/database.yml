@@ -115,4 +115,4 @@ production:
   <<: *default
   database: daily_expense_web
   username: postgres
-  password: <%= ENV['DEMO_DATABASE_PASSWORD'] %>
+  password: <%= ENV['DAILY_EXPENSE_WEB_DATABASE_PASSWORD'] %>

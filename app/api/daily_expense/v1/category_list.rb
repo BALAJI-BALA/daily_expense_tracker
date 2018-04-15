@@ -22,11 +22,13 @@ module DailyExpense
 		desc 'Return a specific category list'
 			route_param :id do
 				get do
-				  expense_category_list = Category.find(params[:id])
-				  status 200
-				  present expense_category_list, with: DailyExpense::Entities::Category
-				rescue ActiveRecord::RecordNotFound
-					error!({ status: :error, message: :not_found }, 404)
+					begin
+					  expense_category_list = Category.find(params[:id])
+					  status 200
+					  present expense_category_list, with: DailyExpense::Entities::Category
+					rescue ActiveRecord::RecordNotFound
+						error!({ status: :error, message: :not_found }, 404)
+					end
 				end
 			end
 		desc 'Create a new category'
@@ -49,16 +51,18 @@ module DailyExpense
 	    		end
 			route_param :id do
 				post 'edit' do
-				  expense_category_list = Category.find(params[:id])
-					if expense_category_list.update(name: params[:name])
-						status 200
-						present expense_category_list, with: DailyExpense::Entities::Category
-					else
-						status 400
-						present failure: "Category was not edited succesfully"
-					end
-				  	rescue ActiveRecord::RecordNotFound
-    					error!({ status: :error, message: :not_found }, 404)
+					begin
+					  expense_category_list = Category.find(params[:id])
+						if expense_category_list.update(name: params[:name])
+							status 200
+							present expense_category_list, with: DailyExpense::Entities::Category
+						else
+							status 400
+							present failure: "Category was not edited succesfully"
+						end
+					  	rescue ActiveRecord::RecordNotFound
+	    					error!({ status: :error, message: :not_found }, 404)
+    				end
 				end
 			end
 		desc 'Delete a specific category from list'
@@ -67,16 +71,18 @@ module DailyExpense
    #  		end
    			route_param :id do
 				delete do
-				  	expense_category_list = Category.find(params[:id])
-				  	if expense_category_list.destroy
-						status 200
-						present expense_category_list, with: DailyExpense::Entities::Category
-					else
-						status 400
-						present delete: "Category was not deleted succesfully"
+					begin
+					  	expense_category_list = Category.find(params[:id])
+					  	if expense_category_list.destroy
+							status 200
+							present expense_category_list, with: DailyExpense::Entities::Category
+						else
+							status 400
+							present delete: "Category was not deleted succesfully"
+						end
+					  	rescue ActiveRecord::RecordNotFound
+							error!({ status: :error, message: :not_found }, 404)
 					end
-				  	rescue ActiveRecord::RecordNotFound
-						error!({ status: :error, message: :not_found }, 404)
 				end
 			end
 		end

@@ -16,13 +16,15 @@ module DailyExpense
 
         desc 'Return a specific expense list'
           route_param :id do
-            get do
-              expense_particular_list = @current_user.expenses.find(params[:id])
-              present expense_particular_list
-                rescue ActiveRecord::RecordNotFound
-                error!({ status: :error, message: :not_found }, 404)
+              get do
+                begin
+                  expense_particular_list = @current_user.expenses.find(params[:id])
+                  present expense_particular_list
+                    rescue ActiveRecord::RecordNotFound
+                      error!({ status: :error, message: :not_found }, 404)
+                end
+              end
             end
-          end
         desc 'Create a new category'
           params do
             requires :date, type: Date, desc: 'Enter a Date'
@@ -33,20 +35,22 @@ module DailyExpense
             # requires :user_id, type: Integer, desc: 'Enter a user id'
           end
           post '/new' do
-            expense_category = Category.find(params[:category_id])
-            expense_user = User.find(@current_user.id)
-            if expense_category.present? && expense_user.present?
-                expense = Expense.create!(date: params[:date], item: params[:item], method: params[:method], amount: params[:amount], category_id: params[:category_id], user_id: @current_user.id)
-              if expense.save
-                status 200
-                    present expense, with: DailyExpense::Entities::Expense
-              else
-                status 400
-                present failure: "Expense was not created succesfully"
+            begin
+              expense_category = Category.find(params[:category_id])
+              expense_user = User.find(@current_user.id)
+              if expense_category.present? && expense_user.present?
+                  expense = Expense.create!(date: params[:date], item: params[:item], method: params[:method], amount: params[:amount], category_id: params[:category_id], user_id: @current_user.id)
+                if expense.save
+                  status 200
+                      present expense, with: DailyExpense::Entities::Expense
+                else
+                  status 400
+                  present failure: "Expense was not created succesfully"
+                end
               end
-            end
-            rescue ActiveRecord::RecordNotFound
+              rescue ActiveRecord::RecordNotFound
                 error!({ status: :error, message: :given_category_id_or_user_id_was_not_found }, 404)
+            end
           end 
         desc 'Edit Expense'
           params do
@@ -60,27 +64,30 @@ module DailyExpense
           end
           route_param :id do
             put '/edit' do
-              expense = @current_user.expenses.find(params[:id])
-              expense_category = Category.find(params[:category_id])
-              expense_user = User.find(current_user.id)
-              if expense.present? && expense_user.present?
-                if expense.update(date: params[:date], item: params[:item], method: params[:method], amount: params[:amount], category_id: params[:category_id], user_id: @current_user.id)
-                      status 200
-                      present expense, with: DailyExpense::Entities::Expense
-                else
-                  status 400
-                  present failure: "Expense was not updated succesfully"
+              begin
+                expense = @current_user.expenses.find(params[:id])
+                expense_category = Category.find(params[:category_id])
+                expense_user = User.find(current_user.id)
+                if expense.present? && expense_user.present?
+                  if expense.update(date: params[:date], item: params[:item], method: params[:method], amount: params[:amount], category_id: params[:category_id], user_id: @current_user.id)
+                        status 200
+                        present expense, with: DailyExpense::Entities::Expense
+                  else
+                    status 400
+                    present failure: "Expense was not updated succesfully"
+                  end
                 end
-              end
-              rescue ActiveRecord::RecordNotFound
+                rescue ActiveRecord::RecordNotFound
                   error!({ status: :error, message: :given_category_id_or_user_id_was_not_found }, 404)
+              end
             end 
           end
         desc 'Delete a specific expense from list'
         route_param :id do
         delete do
+          begin
             expense_list = @current_user.expenses.find(params[:id])
-            if expense_list.destroy
+          if expense_list.destroy
             status 200
             present expense_list, with: DailyExpense::Entities::Expense
           else
@@ -88,7 +95,8 @@ module DailyExpense
             present delete: "Expense was not deleted succesfully"
           end
             rescue ActiveRecord::RecordNotFound
-            error!({ status: :error, message: :not_found }, 404)
+              error!({ status: :error, message: :not_found }, 404)
+            end
         end
       end
       end
